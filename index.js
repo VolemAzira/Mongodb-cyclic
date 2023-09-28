@@ -1,13 +1,13 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const express = require('express')
-const mongoose = require('mongoose')
-const Book = require("./models/books");
+const express = require("express");
+const mongoose = require("mongoose");
+const Projects = require("./models/Projects.js");
 
-const app = express()
-const PORT = process.env.PORT || 3000
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI);
@@ -16,46 +16,34 @@ const connectDB = async () => {
     console.log(error);
     process.exit(1);
   }
-}
+};
 
 //Routes go here
-app.get('/', (req,res) => {
-    res.send({ title: 'Books' });
-})
+app.get("/", (req, res) => {
+  res.send({ title: "Project" });
+});
 
-app.get('/books', async (req,res)=> {
-
-  const book = await Book.find();
-
-  if (book) {
-    res.json(book)
+app.get("/projects", async (req, res) => {
+  const projects = await Projects.find();
+  if (projects) {
+    res.json(projects);
   } else {
     res.send("Something went wrong.");
   }
-  
 });
 
-app.get('/add-note', async (req,res) => {
+app.get("/projects:id", async (req, res) => {
   try {
-    await Book.insertMany([
-      {
-        title: "Sons Of Anarchy",
-        body: "Body text goes here...",
-      },
-      {
-        title: "Games of Thrones",
-        body: "Body text goes here...",
-      }
-    ]);
-    res.json({"Data":"Added"})
+    const project = await ProjectModel.findById(req.params.id);
+    res.status(200).json(project);
   } catch (error) {
-    console.log("err", + error);
+    res.status(404).json({ message: error.message });
   }
-})
+});
 
 //Connect to the database before listening
 connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log("listening for requests");
-    })
-})
+  app.listen(PORT, () => {
+    console.log("listening for requests");
+  });
+});
