@@ -26,7 +26,7 @@ const connectDB = async () => {
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://volemazira.vercel.app/",
+    origin: "https://volemazira.vercel.app" || "http://localhost:3000",
     credentials: true,
   })
 );
