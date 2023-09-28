@@ -24,7 +24,12 @@ const connectDB = async () => {
 
 // Middleware untuk mengizinkan JSON parsing
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://volemazira.vercel.app/",
+    credentials: true,
+  })
+);
 
 // Routes go here
 app.get("/", (req, res) => {
